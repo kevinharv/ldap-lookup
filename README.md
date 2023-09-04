@@ -7,6 +7,9 @@ This application serves as a portal for technicians to view user account informa
 # Features
 - Lookup user account details
 - Lookup group information
+## UI Features
+- Tooltips on fields
+    - i.e. "Computer When Created" - When the computer first appeared in the directory. Usually, this is when the computer was joined to the domain.
 
 # Tech Stack
 - NextJS

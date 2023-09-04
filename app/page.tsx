@@ -1,9 +1,16 @@
 
-
 export default function Home() {
+  // if !isAuthenticated {
+  //   // redirect to the login page
+  // }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className='text-6xl underline font-bold'>Hello World</h1> 
+    <main className="flex flex-col items-center justify-between p-24">
+      <head>
+        <link rel="icon" href="/favicon_dark.png" sizes="any" />
+      </head>
+      <div>
+        <h1>Main Div</h1>
+      </div>
     </main>
   )
 }
