@@ -1,5 +1,5 @@
 {
-  "name": "user-lookup",
+  "name": "ldap-lookup",
   "version": "0.1.0",
   "private": true,
   "scripts": {
