@@ -20,3 +20,8 @@ This application serves as a portal for technicians to view user account informa
 - /user/{ sAMAccountName }
 - /group/{ CN }
 - /computer/{ Hostname | FQDN }
+
+# References
+- [AD Computer](https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-adcomputer?view=windowsserver2022-ps)
+- [Next Routing and Pages](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts)
+- [TailwindCSS Docs](https://tailwindcss.com/docs/)
