@@ -3,6 +3,12 @@ This application serves as a portal for technicians to view user account informa
 
 # TODO
 - Dark/light favicon based on browser
+- Look into AAD query for some fields
+    - M365 group membership would be most useful
+
+# Administrative Capabilities
+- Show/hide any field for any user/group with access
+- eduPerson enabled?
 
 # Features
 - Lookup user account details
