@@ -41,17 +41,6 @@ export default function SearchCard() {
             return;
         }
 
-        /*
-            DO MORE DATA VALIDATION HERE!!
-
-            Should sanitize the input to only be alpha-numeric?
-            May consider parameters via env files for specifying
-            the format of a valid entry. Would change based on
-            user/group/computer. Mostly just trying to avoid
-            injection attacks here. Will need to sanitize ahead of
-            LDAP request anyway.
-        */
-        
         // Redirect to appropriate page based on category
         const category = formState.searchCategory;
         if (category == "user") {
@@ -65,7 +54,6 @@ export default function SearchCard() {
         }
     };
 
-    // Form courtesy GPT-3.5 :)
     return (
         <div>
             <form onSubmit={handleSubmit} className="p-2">
@@ -103,7 +91,7 @@ export default function SearchCard() {
                 <label className="ml-2" htmlFor="computer">Computer</label>
             </div>
             <div>
-                {/* <label htmlFor="searchTerm">Search Term:</label> */}
+                <label htmlFor="searchTerm">Search Term:</label>
                 <input
                 className="w-full text-black"
                 type="text"
