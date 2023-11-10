@@ -17,6 +17,14 @@ This application serves as a portal for technicians to view user account informa
 - Tooltips on fields
     - i.e. "Computer When Created" - When the computer first appeared in the directory. Usually, this is when the computer was joined to the domain.
 
+# Development
+This application requires the following environment variables to be specified in the an `.env.local` file.
+```env
+LDAP_SERVER="192.168.1.10"
+LDAP_BIND_DN="CN=Dev IDM Service Account,OU=Service Accounts,OU=KEVHARV Users,DC=ad,DC=kevharv,DC=com"
+LDAP_BIND_PW="PASSWORD HERE"
+```
+
 # Tech Stack
 - NextJS
 
