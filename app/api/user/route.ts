@@ -1,13 +1,28 @@
 // GET request under user route
-import { ADClient } from "@/utils/connect";
+import { ADClient } from "@/utils/AD";
 
 export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const searchTerm = searchParams.get("term");
     const AD = new ADClient();
+    let searchResults = null;
     
-    const bindStatus = await AD.bind();
+    try {
+        await AD.bind();
+        searchResults = await AD.searchUser(`${searchTerm}`); 
+    } catch (e) {
+        console.error(e);
+    }
 
-    const searchResults = await AD.searchUser("kharvey"); 
+    try {
+        await AD.unbind();
+    } catch (e) {
+        console.error(e);
+    }
 
-    const unbindStatus = await AD.unbind();
-    return Response.json(searchResults);
+    if (searchResults != null) {
+        return Response.json(searchResults);
+    } else {
+        return Response.error(); 
+    }
 }
