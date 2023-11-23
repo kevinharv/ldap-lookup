@@ -1,5 +1,7 @@
+import Header from '@/components/Header'
 import './globals.css'
 import type { Metadata } from 'next'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'LDAP Lookup',
@@ -14,21 +16,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon_dark.png" sizes="any" />
+        <link rel="icon" href="/favicon_dark.png" media="(prefers-color-scheme: dark)" sizes="any" />
+        <link rel="icon" href="/favicon_light.png" media="(prefers-color-scheme: light)" sizes="any" />
       </head>
-      <body className='max-h-screen'>
+      <body className="max-h-screen">
+        <Header />
         {children}
+        <Footer />
       </body>
-        {/* <footer
-        className="sticky bottom-0 bg-neutral-200 text-center dark:bg-neutral-700 lg:text-left">
-          <div className="p-4 text-center text-neutral-700 dark:text-neutral-200">
-            © 2023 Copyright:
-            <a
-              className="text-neutral-800 dark:text-neutral-400"
-              href="https://tailwind-elements.com/"
-            >Tailwind Elements</a>
-          </div>
-        </footer> */}
     </html>
   )
 }
