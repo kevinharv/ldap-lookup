@@ -60,7 +60,9 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
+                    attributes: ""
                 });
             return searchEntries;
         } catch (e) {
@@ -78,7 +80,9 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
+                    attributes: ""
                 });
             return searchEntries;
         } catch (e) {
@@ -96,7 +100,9 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
+                    attributes: ""
                 });
             return searchEntries;
         } catch (e) {
