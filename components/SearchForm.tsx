@@ -1,15 +1,17 @@
 "use client"
-import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 enum ObjectType {
-    USER = "User",
-    GROUP = "Group",
-    COMPUTER = "Computer"
+    USER = "user",
+    GROUP = "group",
+    COMPUTER = "computer"
 }
 
 export default function SearchForm() {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [objType, setObjType] = useState<ObjectType>(ObjectType.USER);
+    const router = useRouter();
 
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         setSearchTerm(e.target.value);
@@ -17,8 +19,8 @@ export default function SearchForm() {
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        alert(`Searching for ${searchTerm} in ${objType}s`);
-        setSearchTerm("");
+        // alert(`Searching for ${searchTerm} in ${objType}s`);
+        router.push(`/results?type=${objType}&term=${searchTerm}`);
     }
 
     return (
