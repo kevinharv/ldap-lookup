@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getLDAPObjects } from "@/utils/fetchLDAP";
+import { searchLDAPObjects } from "@/utils/fetchLDAP";
 
 
 
@@ -13,7 +13,7 @@ export default async function Page(req: any) {
     }
 
     try {
-        const objects = await getLDAPObjects(type, term);
+        const objects = await searchLDAPObjects(type, term);
         if (objects.legnth <= 1) {
             redirect(`/results/details?type=${type}&term=${term}`);
         }

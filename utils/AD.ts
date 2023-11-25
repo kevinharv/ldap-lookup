@@ -115,4 +115,70 @@ export class ADClient {
             throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
         }
     }
+    
+    async listUsers(searchTerm: string) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
+                    attributes: ""
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
+        }
+    }
+
+
+
+
+    // ADD SPECIFIC ATTRIBUTES TO RETURN FOR THE LIST FUNCTIONS
+    // SHOULD RETURN NAME, BASIC INFO
+
+    async listComputers(searchTerm: string) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
+                    attributes: ""
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
+        }
+    }
+
+    async listGroups(searchTerm: string) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    // derefAliases: "search",
+                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
+                    attributes: ""
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
+        }
+    }
 }
