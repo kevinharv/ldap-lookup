@@ -2,7 +2,13 @@
 This application serves as a portal for technicians to view user account information from Active Directory (or other compatible directory service) such as account status, group membership, password expiry date, and more. Computer account information is also available.
 
 # TODO
-- Dark/light favicon based on browser
+- Page of search results - list CN, sAMAccountName if user?
+    - Update AD class to have methods that only return those attributes
+    - Will only need to do if more than one result, otherwise redirect to details page
+- Details page - show cards for categories of attributes
+    - Will have to manually specify attributes for each category for each object type
+    - Groups should do paginated member enumeration
+
 - Look into AAD query for some fields
     - M365 group membership would be most useful
 
