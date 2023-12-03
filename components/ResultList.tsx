@@ -3,9 +3,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function ResultList(props: any) {
-    const objects = await searchLDAPObjects(props.type, props.term);
-    if (objects.length <= 1) {
+    const objects = await searchLDAPObjects(props.type, props.term, 10);
+    if (objects.length == 1) {
         redirect(`/results/details?type=${props.type}&term=${props.term}`);
+    } else if (objects.length == 0) {
+        return (
+            <h1>No Results Found</h1>
+        )
     }
 
     return (

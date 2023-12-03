@@ -11,8 +11,6 @@ const BIND_DN = process.env.LDAP_BIND_DN;
 const BIND_PW = process.env.LDAP_BIND_PW;
 
 const SEARCH_DN = process.env.LDAP_SEARCH_DN;
-const SEARCH_LENGTH = 10;
-const SHORT_SEARCH_LENGTH = 3;
 
 export class ADClient {
     client: any;
@@ -129,7 +127,7 @@ export class ADClient {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
                     filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
-                    attributes: "",
+                    attributes: ["dn", "displayName", "sAMAccountName"],
                     limitSize: numEntries
                 });
             return searchEntries;
@@ -150,7 +148,7 @@ export class ADClient {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
                     filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
-                    attributes: "",
+                    attributes: ["dn", "cn"],
                     sizeLimit: numEntries
                 });
             return searchEntries;
@@ -170,8 +168,8 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
-                    attributes: "",
+                    filter: `(&(objectClass=computer)(|(cn=*${searchTerm}*)(name=*${searchTerm}*)))`,
+                    attributes: ["dn", "cn"],
                     sizeLimit: numEntries
                 });
             return searchEntries;

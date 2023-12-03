@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { searchLDAPObjects } from "@/utils/fetchLDAP";
 import ResultList from "@/components/ResultList";
 
 
