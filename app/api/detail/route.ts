@@ -1,15 +1,25 @@
-// GET request under user route
 import { ADClient } from "@/utils/AD";
+
+
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
+    const searchType = searchParams.get("type");
     const searchTerm = searchParams.get("term");
     const AD = new ADClient();
     let searchResults = null;
     
     try {
         await AD.bind();
-        searchResults = await AD.searchUser(`${searchTerm}`); 
+        if (searchType == "user") {
+            searchResults = await AD.searchUser(`${searchTerm}`, 1); 
+        } else if (searchType == "group") {
+            searchResults = await AD.searchGroup(`${searchTerm}`, 1); 
+        } else if (searchType == "computer") {
+            searchResults = await AD.searchComputer(`${searchTerm}`, 1); 
+        } else {
+            throw new Error("Invalid search type");
+        }
     } catch (e) {
         console.error(e);
     }
