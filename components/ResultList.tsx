@@ -4,9 +4,10 @@ import Link from "next/link";
 
 export default async function ResultList(props: any) {
     const objects = await searchLDAPObjects(props.type, props.term, 10);
-    if (objects.length == 1) {
+    console.log(objects)
+    if (objects.results.length == 1) {
         redirect(`/results/details?type=${props.type}&term=${props.term}`);
-    } else if (objects.length == 0) {
+    } else if (objects.results.length == 0) {
         return (
             <h1>No Results Found</h1>
         )
@@ -25,10 +26,10 @@ export default async function ResultList(props: any) {
                 </tr>
             </thead>
             <tbody className="border">
-                {objects.map((item: any) => {
+                {objects.results.map((item: any) => {
                     return <tr key={item.dn} className="border">
                         <td className="p-2">{item.displayName ? item.displayName : (item.cn ? item.cn : "No Name")}</td>
-                        <td className="p-2">{item.sAMAccountName ? item.sAMAccountName : "Unknown"}</td>
+                        <td className="p-2">{item.sAMAccountName ? item.sAMAccountName : ""}</td>
                         <td className="p-2"><Link className="bg-neutral-800 p-2 rounded-lg" href={`/results/details?type=${props.type}&term=${item.sAMAccountName}`}>Go</Link></td>
                     </tr>
                 })}

@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className="max-h-screen">
         <Header />
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   )

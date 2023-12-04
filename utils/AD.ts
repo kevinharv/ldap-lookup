@@ -1,9 +1,3 @@
-/*
-    TODO
-    - Add DN, *CN*, *SN*, *displayName*, etc. to searches
-*/
-
-
 import { Client } from "ldapts";
 
 const SERVER = process.env.LDAP_SERVER;
@@ -63,9 +57,9 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
+                    filter: `(&(objectClass=user)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: "",
-                    sizeLimit: numEntries
+                    sizeLimit: numEntries,
                 });
             return searchEntries;
         } catch (e) {
@@ -84,7 +78,7 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
+                    filter: `(&(objectClass=group)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: "",
                     sizeLimit: numEntries
                 });
@@ -105,7 +99,7 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
+                    filter: `(&(objectClass=computer)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: "",
                     sizeLimit: numEntries
                 });
@@ -126,7 +120,7 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
+                    filter: `(&(objectClass=user)(|(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: ["dn", "displayName", "sAMAccountName"],
                     limitSize: numEntries
                 });
@@ -147,7 +141,7 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
+                    filter: `(&(objectClass=group)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: ["dn", "cn"],
                     sizeLimit: numEntries
                 });
@@ -168,7 +162,7 @@ export class ADClient {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    filter: `(&(objectClass=computer)(|(cn=*${searchTerm}*)(name=*${searchTerm}*)))`,
+                    filter: `(&(objectClass=computer)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
                     attributes: ["dn", "cn"],
                     sizeLimit: numEntries
                 });
@@ -183,5 +177,4 @@ export class ADClient {
             throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
         }
     }
-
 }

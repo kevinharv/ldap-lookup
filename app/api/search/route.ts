@@ -36,7 +36,10 @@ export async function GET(request: Request) {
     }
 
     if (searchResults != null) {
-        return Response.json(searchResults);
+        return Response.json({
+            "type": searchType,
+            "results": searchResults
+        });
     } else {
         return Response.error(); 
     }
