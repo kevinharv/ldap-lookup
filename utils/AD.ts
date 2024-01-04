@@ -1,20 +1,16 @@
 import { Client } from "ldapts";
 
-// Connect to LDAP server
-// Bind to LDAP server
-// Start TLS?
-
-// Disconnect?
-
 const SERVER = process.env.LDAP_SERVER;
 const BIND_DN = process.env.LDAP_BIND_DN;
 const BIND_PW = process.env.LDAP_BIND_PW;
+
 const SEARCH_DN = process.env.LDAP_SEARCH_DN;
 
 export class ADClient {
     client: any;
 
     constructor() {
+        // TODO - add SSL/TLS support
         this.client = new Client({
             url: `ldap://${SERVER}`,
             timeout: 500,
@@ -56,13 +52,77 @@ export class ADClient {
         }
     }
 
-    async searchUser(searchTerm: string) {
+    // Searches AD for user - returns n number of search results with all attributes
+    async searchUser(searchTerm: string, numEntries: number) {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
-                    attributes: ""
+                    filter: `(&(objectClass=user)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: "",
+                    sizeLimit: numEntries,
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching users\n${JSON.stringify(debugInfo)}`);
+        }
+    }
+
+    // Searches AD for group - returns n number of search results with all attributes
+    async searchGroup(searchTerm: string, numEntries: number) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    filter: `(&(objectClass=group)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: "",
+                    sizeLimit: numEntries
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching groups\n${JSON.stringify(debugInfo)}`);
+        }
+    }
+
+    // Searches AD for computer - returns n number of search results with all attributes
+    async searchComputer(searchTerm: string, numEntries: number) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    filter: `(&(objectClass=computer)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: "",
+                    sizeLimit: numEntries
+                });
+            return searchEntries;
+        } catch (e) {
+            const debugInfo = {
+                "server": SERVER,
+                "bindDN": BIND_DN,
+                "searchTerm": searchTerm,
+                "error": e
+            }
+            throw new Error(`Error when searching computers\n${JSON.stringify(debugInfo)}`);
+        }
+    }
+
+    // Searches AD for users - returns n entries with limited attributes
+    async shortUserSearch(searchTerm: string, numEntries: number) {
+        try {
+            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
+                    scope: "sub",
+                    filter: `(&(objectClass=user)(|(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: ["dn", "displayName", "sAMAccountName"],
+                    limitSize: numEntries
                 });
             return searchEntries;
         } catch (e) {
@@ -76,13 +136,14 @@ export class ADClient {
         }
     }
 
-    async searchComputer(searchTerm: string) {
+    // Searches AD for groups - returns n entries with limited attributes
+    async shortGroupSearch(searchTerm: string, numEntries: number) {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
-                    attributes: ""
+                    filter: `(&(objectClass=group)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: ["dn", "cn"],
+                    sizeLimit: numEntries
                 });
             return searchEntries;
         } catch (e) {
@@ -96,79 +157,14 @@ export class ADClient {
         }
     }
 
-    async searchGroup(searchTerm: string) {
+    // Searches AD for computers - returns n entries with limited attributes
+    async shortComputerSearch(searchTerm: string, numEntries: number) {
         try {
             const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
                     scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
-                    attributes: ""
-                });
-            return searchEntries;
-        } catch (e) {
-            const debugInfo = {
-                "server": SERVER,
-                "bindDN": BIND_DN,
-                "searchTerm": searchTerm,
-                "error": e
-            }
-            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
-        }
-    }
-    
-    async listUsers(searchTerm: string) {
-        try {
-            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
-                    scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=user)(|(sAMAccountName=${searchTerm})(userPrincipalName=${searchTerm}*)))`,
-                    attributes: ""
-                });
-            return searchEntries;
-        } catch (e) {
-            const debugInfo = {
-                "server": SERVER,
-                "bindDN": BIND_DN,
-                "searchTerm": searchTerm,
-                "error": e
-            }
-            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
-        }
-    }
-
-
-
-
-    // ADD SPECIFIC ATTRIBUTES TO RETURN FOR THE LIST FUNCTIONS
-    // SHOULD RETURN NAME, BASIC INFO
-
-    async listComputers(searchTerm: string) {
-        try {
-            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
-                    scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=computer)(|(sAMAccountName=*${searchTerm}*)(name=*${searchTerm}*)))`,
-                    attributes: ""
-                });
-            return searchEntries;
-        } catch (e) {
-            const debugInfo = {
-                "server": SERVER,
-                "bindDN": BIND_DN,
-                "searchTerm": searchTerm,
-                "error": e
-            }
-            throw new Error(`Error when searching\n${JSON.stringify(debugInfo)}`);
-        }
-    }
-
-    async listGroups(searchTerm: string) {
-        try {
-            const { searchEntries, searchReferences } = await this.client.search(SEARCH_DN, {
-                    scope: "sub",
-                    // derefAliases: "search",
-                    filter: `(&(objectClass=group)(|(sAMAccountName=${searchTerm})(name=${searchTerm})))`,
-                    attributes: ""
+                    filter: `(&(objectClass=computer)(|(name=*${searchTerm}*)(dn=*${searchTerm}*)(cn=*${searchTerm}*)(sn=*${searchTerm}*)(displayName=*${searchTerm}*)(sAMAccountName=${searchTerm}*)(userPrincipalName=${searchTerm}*)))`,
+                    attributes: ["dn", "cn"],
+                    sizeLimit: numEntries
                 });
             return searchEntries;
         } catch (e) {

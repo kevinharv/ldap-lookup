@@ -1,27 +1,22 @@
 import { ADClient } from "@/utils/AD";
 
 
-// SEARCH OBJECTS
-// TAKES type (user, group, computer), term (string), and number of results
-// Returns error if AD throws an error, results otherwise
-
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const searchType = searchParams.get("type");
     const searchTerm = searchParams.get("term");
-    const numResults = searchParams.get("qtyResults");
     const AD = new ADClient();
     let searchResults = null;
     
     try {
         await AD.bind();
         if (searchType == "user") {
-            searchResults = await AD.shortUserSearch(`${searchTerm}`, Number(numResults)); 
+            searchResults = await AD.searchUser(`${searchTerm}`, 1); 
         } else if (searchType == "group") {
-            searchResults = await AD.shortGroupSearch(`${searchTerm}`, Number(numResults)); 
+            searchResults = await AD.searchGroup(`${searchTerm}`, 1); 
         } else if (searchType == "computer") {
-            searchResults = await AD.shortComputerSearch(`${searchTerm}`, Number(numResults)); 
+            searchResults = await AD.searchComputer(`${searchTerm}`, 1); 
         } else {
             throw new Error("Invalid search type");
         }
@@ -36,10 +31,11 @@ export async function GET(request: Request) {
     }
 
     if (searchResults != null) {
-        return Response.json({
+        const resObj = {
             "type": searchType,
             "results": searchResults
-        });
+        }
+        return Response.json(resObj);
     } else {
         return Response.error(); 
     }

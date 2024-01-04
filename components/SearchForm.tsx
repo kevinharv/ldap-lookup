@@ -2,6 +2,9 @@
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 
+// TODO - Set cookie for search object type
+
+
 enum ObjectType {
     USER = "user",
     GROUP = "group",
@@ -19,6 +22,7 @@ export default function SearchForm() {
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        // TODO - input validation on search term
         // alert(`Searching for ${searchTerm} in ${objType}s`);
         router.push(`/results?type=${objType}&term=${searchTerm}`);
     }

@@ -2,6 +2,9 @@
 This application serves as a portal for technicians to view user account information from Active Directory (or other compatible directory service) such as account status, group membership, password expiry date, and more. Computer account information is also available.
 
 # TODO
+- Authentication & Authorization
+    - SAML for web client
+    - Token between client and server?
 - Page of search results - list CN, sAMAccountName if user?
     - Update AD class to have methods that only return those attributes
     - Will only need to do if more than one result, otherwise redirect to details page
