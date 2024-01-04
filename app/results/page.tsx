@@ -1,19 +1,20 @@
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
 import { searchLDAPObjects } from "@/utils/fetchLDAP";
+import ListItemCard from "@/components/ListItemCard";
 
 
 
 export default async function Page(req: any) {
     const type = req.searchParams.type;
     const term = req.searchParams.term;
+    let objects = [];
 
     if (!type || !term) {
         redirect("/");
     }
 
     try {
-        const objects = await searchLDAPObjects(type, term);
+        objects = await searchLDAPObjects(type, term);
         if (objects.legnth <= 1) {
             redirect(`/results/details?type=${type}&term=${term}`);
         }
@@ -27,10 +28,13 @@ export default async function Page(req: any) {
 
     // If only one result, present results
 
+    // TODO - abstract for computer, user, group
+
     return (
         <div>
-            <Suspense fallback={<h1>Loading...</h1>}>
-            </Suspense>
+            {objects.map((obj: any) => {
+                return <ListItemCard key={obj.dn} displayName={obj.displayName} sAMAccountName={obj.sAMAccountName} />
+            })}
         </div>
     )
 }
