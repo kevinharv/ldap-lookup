@@ -1,0 +1,23 @@
+package web
+
+import "github.com/go-ldap/ldap/v3"
+
+
+templ UserPage(user *ldap.Entry) {
+    <div>
+        <p>{ user.DN }</p>
+    </div>
+}
+
+/*
+    TO-DO
+    - make CSS templ component (import on all pages)
+    - make home page with centered search box
+    - finish user page
+    - make search box responsive (search for user, limit attributes to displayName, limit responses to 5)
+
+
+    LONG TERM
+    - instrument with OpenTelemetry
+    - create Docker image
+*/
