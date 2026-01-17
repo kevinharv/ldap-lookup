@@ -27,5 +27,7 @@ func GetDirectoryUser(server *ldap.Conn, conf config.LDAPConfiguration, sAMAccou
 		return searchResults.Entries[0], nil
 	}
 
+	// searchResults.Entries[0].
+
 	return nil, fmt.Errorf("no user found")
 }

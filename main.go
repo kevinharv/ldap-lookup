@@ -13,24 +13,23 @@ import (
 
 func main() {
 	// Load configurations
-	webConfig := config.GetWebConfig()
-	ldapConfig := config.GetLDAPConfig()
+	appConfig := config.LoadAppConfig()
 
 	// TODO - Enable TLS & LDAPS
-	ldapConnection, err := ldap.DialURL(fmt.Sprintf("ldap://%s:%d", ldapConfig.ServerURL, ldapConfig.ServerPort))
+	ldapConnection, err := ldap.DialURL(fmt.Sprintf("ldap://%s:%d", appConfig.LDAPConfig.ServerURL, appConfig.LDAPConfig.ServerPort))
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer ldapConnection.Close()
 
-	err = ldapConnection.Bind(ldapConfig.BindDN, ldapConfig.BindPassword)
+	err = ldapConnection.Bind(appConfig.LDAPConfig.BindDN, appConfig.LDAPConfig.BindPassword)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	http.HandleFunc("/users/{sAMAccountName}", func(w http.ResponseWriter, r *http.Request) {
 		username := r.PathValue("sAMAccountName")
-		user, err := directory.GetDirectoryUser(ldapConnection, ldapConfig, username)
+		user, err := directory.GetDirectoryUser(ldapConnection, appConfig.LDAPConfig, username)
 		if err != nil {
 			log.Printf("Could not find %s!\n", username)
 			web.Error().Render(r.Context(), w)
@@ -39,6 +38,6 @@ func main() {
 
 		web.UserPage(user).Render(r.Context(), w)
 	})
-	http.ListenAndServe(fmt.Sprintf(":%d", webConfig.ServerPort), nil)
+	log.Printf("Starting web server on port %d", appConfig.WebConfig.ServerPort)
+	http.ListenAndServe(fmt.Sprintf(":%d", appConfig.WebConfig.ServerPort), nil)
 }
-

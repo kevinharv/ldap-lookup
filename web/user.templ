@@ -2,10 +2,15 @@ package web
 
 import "github.com/go-ldap/ldap/v3"
 
+// func printUser(user *ldap.Entry) string {
+//     return user.PrettyPrint(2)
+// }
 
 templ UserPage(user *ldap.Entry) {
     <div>
         <p>{ user.DN }</p>
+        <p>{ user.GetAttributeValue("sAMAccountName") }</p>
+        <p>{ hello("foo") }</p>
     </div>
 }
 
